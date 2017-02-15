@@ -73,7 +73,6 @@ class AAPLSwipeTransitionAnimator: NSObject, UIViewControllerAnimatedTransitioni
         // view controller and its presentingViewController will be
         // fromViewController.  Otherwise, this is a dismissal.
         let isPresenting = (toViewController.presentingViewController === fromViewController)
-        
         let fromFrame = transitionContext.initialFrame(for: fromViewController)
         let toFrame = transitionContext.finalFrame(for: toViewController)
         
@@ -94,12 +93,12 @@ class AAPLSwipeTransitionAnimator: NSObject, UIViewControllerAnimatedTransitioni
         
         if isPresenting {
             // For a presentation, the toView starts off-screen and slides in.
-            //fromView.frame = fromFrame.offsetBy(dx: fromFrame.size.width * offset.dx * -1, dy: fromFrame.size.height * offset.dy * -1)  //Lucas
+
             toView.frame = toFrame.offsetBy(dx: toFrame.size.width * offset.dx * -1,
                 dy: toFrame.size.height * offset.dy * -1)
         } else {
             fromView.frame = fromFrame
-            toView.frame = toFrame
+            toView.frame = toFrame.offsetBy(dx: toFrame.size.width * -1, dy: 1)//Lucas
         }
         
         // We are responsible for adding the incoming view to the containerView
@@ -115,31 +114,18 @@ class AAPLSwipeTransitionAnimator: NSObject, UIViewControllerAnimatedTransitioni
         
         let transitionDuration = self.transitionDuration(using: transitionContext)
 
-        print("------------------------------------------------------")
-        print("- - - - - - - Animator -> animateTransition - - - - - ")
-        print("fromView Frame BEFORE:")
-        print(fromView.frame)
-        print(" ")
-        print(" ")
-        print("toView Frame BEFORE:")
-        print(toView.frame)
-
         UIView.animate(withDuration: transitionDuration, animations: {
             if isPresenting {
                 toView.frame = toFrame
+                fromView.frame = fromFrame.offsetBy(dx: fromFrame.size.width * -1, dy: 1)  //Lucas
             } else {
                 // For a dismissal, the fromView slides off the screen.
+                toView.frame = fromView.frame
                 fromView.frame = fromFrame.offsetBy(dx: fromFrame.size.width * offset.dx,
                     dy: fromFrame.size.height * offset.dy)
+
             }
-            print("------------------------------------------------------")
-            print("- - - - - - - Animator -> animateTransition - - - - - ")
-            print("fromView Frame AFTER:")
-            print(fromView.frame)
-            print(" ")
-            print(" ")
-            print("toView Frame AFTER:")
-            print(toView.frame)
+
             }, completion: {finished in
                 let wasCancelled = transitionContext.transitionWasCancelled
                 

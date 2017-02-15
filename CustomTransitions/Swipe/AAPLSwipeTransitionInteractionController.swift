@@ -81,7 +81,7 @@ class AAPLSwipeTransitionInteractionController: UIPercentDrivenInteractiveTransi
         
         let width = (transitionContainerView?.bounds ?? CGRect()).width
         let height = (transitionContainerView?.bounds ?? CGRect()).height
-        print(width)
+
         // Return an appropriate percentage based on which edge we're dragging
         // from.
         if self.edge == .right {
